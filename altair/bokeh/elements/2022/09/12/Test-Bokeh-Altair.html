@@ -145,12 +145,12 @@ window.onload = wrap_img;
 <a class="anchor" href="#Bokeh" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bokeh<a class="anchor-link" href="#Bokeh"> </a>
 </h2>
 <p>Let's use this example from <a href="https://docs.bokeh.org/en/latest/docs/gallery/periodic.html">Bokeh documentation</a> to display an interactive Periodic Table of Elements.</p>
-<p>A standard Bokeh workflow for displaying plots inline in Jupyter Notebook or Jupyter Lab goes like this:
-1) call <code>output_notebook()</code>,
-2) construct our plot object <code>p</code>,
+<p>A standard Bokeh workflow for displaying plots inline in Jupyter Notebook or Jupyter Lab goes like this:</p>
+<p>1) call <code>output_notebook()</code>,<br>
+2) construct our plot object <code>p</code>,<br>
 3) pass the plot object into <code>show()</code>.</p>
 <p>The plots show up in the notebook but do not survive the process of conversion to a static HTML page.  What do we do?</p>
-<p>Using <code>components</code>, we can extract the JS and HTML snippets.  Then we recombine them into one JS+HTML chunk with f-string formatting, and render the plot with the help of <code>IPython.display</code>.</p>
+<p>Using <code>bokeh.embed.components</code>, we can extract the JS and HTML snippets.  Then we recombine them into one JS+HTML chunk with f-string formatting, and render the plot with the help of <code>IPython.display</code>.</p>
 
 </div>
 </div>
@@ -409,7 +409,7 @@ window.onload = wrap_img;
 <p></p>
 <div class="flash flash-success">
     <svg class="octicon octicon-checklist" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M2.5 1.75a.25.25 0 01.25-.25h8.5a.25.25 0 01.25.25v7.736a.75.75 0 101.5 0V1.75A1.75 1.75 0 0011.25 0h-8.5A1.75 1.75 0 001 1.75v11.5c0 .966.784 1.75 1.75 1.75h3.17a.75.75 0 000-1.5H2.75a.25.25 0 01-.25-.25V1.75zM4.75 4a.75.75 0 000 1.5h4.5a.75.75 0 000-1.5h-4.5zM4 7.75A.75.75 0 014.75 7h2a.75.75 0 010 1.5h-2A.75.75 0 014 7.75zm11.774 3.537a.75.75 0 00-1.048-1.074L10.7 14.145 9.281 12.72a.75.75 0 00-1.062 1.058l1.943 1.95a.75.75 0 001.055.008l4.557-4.45z"></path></svg>
-    <strong>Tip: </strong>
+    <strong>Tip: </strong>Hover over the elements to see additional information.
 </div>
 
 </div>

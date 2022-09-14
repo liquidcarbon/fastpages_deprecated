@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Dataclasses For The Masses | A Million Little Monomers</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Dataclasses For The Masses" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Make big data small again!" />
+<meta property="og:description" content="Make big data small again!" />
+<link rel="canonical" href="https://liquidcarbon.github.io/blog/attrs/dataclasses/numpy/pandas/olap/2022/09/13/Dataclasses-For-The-Masses.html" />
+<meta property="og:url" content="https://liquidcarbon.github.io/blog/attrs/dataclasses/numpy/pandas/olap/2022/09/13/Dataclasses-For-The-Masses.html" />
+<meta property="og:site_name" content="A Million Little Monomers" />
+<meta property="og:image" content="https://liquidcarbon.github.io/blog/images/arrays-hector-j-rivas-87hFrPk3V-s-unsplash.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-09-13T00:00:00-05:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://liquidcarbon.github.io/blog/images/arrays-hector-j-rivas-87hFrPk3V-s-unsplash.jpeg" />
+<meta property="twitter:title" content="Dataclasses For The Masses" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-09-13T00:00:00-05:00","datePublished":"2022-09-13T00:00:00-05:00","description":"Make big data small again!","headline":"Dataclasses For The Masses","image":"https://liquidcarbon.github.io/blog/images/arrays-hector-j-rivas-87hFrPk3V-s-unsplash.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://liquidcarbon.github.io/blog/attrs/dataclasses/numpy/pandas/olap/2022/09/13/Dataclasses-For-The-Masses.html"},"url":"https://liquidcarbon.github.io/blog/attrs/dataclasses/numpy/pandas/olap/2022/09/13/Dataclasses-For-The-Masses.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://liquidcarbon.github.io/blog/feed.xml" title="A Million Little Monomers" /><link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/blog/">A Million Little Monomers</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/blog/about/">About Me</a><a class="page-link" href="/blog/search/">Search</a><a class="page-link" href="/blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Dataclasses For The Masses</h1><p class="page-description">Make big data small again!</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-09-13T00:00:00-05:00" itemprop="datePublished">
+        Sep 13, 2022
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      6 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/blog/categories/#attrs">attrs</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#dataclasses">dataclasses</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#numpy">numpy</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#pandas">pandas</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#OLAP">OLAP</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-justify-center">
+          <div class="px-2">
+
+    <a href="https://github.com/liquidcarbon/blog/tree/master/_notebooks/2022-09-13-Dataclasses-For-The-Masses.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/liquidcarbon/blog/blob/master/_notebooks/2022-09-13-Dataclasses-For-The-Masses.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/blog/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+          <div class="px-2">
+  <a href="https://deepnote.com/launch?url=https%3A%2F%2Fgithub.com%2Fliquidcarbon%2Fblog%2Fblob%2Fmaster%2F_notebooks%2F2022-09-13-Dataclasses-For-The-Masses.ipynb" target="_blank">
+      <img class="notebook-badge-image" src="/blog/assets/badges/deepnote.svg" alt="Launch in Deepnote"/>
+  </a>
+</div>
+
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul id="toc" class="section-nav">
+<li class="toc-entry toc-h2"><a href="#DaaS-Made-Easy">DaaS Made Easy </a></li>
+<li class="toc-entry toc-h2"><a href="#Implementation">Implementation </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#Minimal-Example">Minimal Example </a></li>
+<li class="toc-entry toc-h3"><a href="#Attrs">Attrs </a></li>
+<li class="toc-entry toc-h3"><a href="#Enable-Pandas-and-Pyarrow">Enable Pandas and Pyarrow </a></li>
+<li class="toc-entry toc-h3"><a href="#Nullable-arrays">Nullable arrays </a></li>
+<li class="toc-entry toc-h3"><a href="#Type-Enforcement">Type Enforcement </a></li>
+<li class="toc-entry toc-h3"><a href="#Inheritance">Inheritance </a></li>
+<li class="toc-entry toc-h3"><a href="#In-The-End">In The End </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#Now-What?">Now What? </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2022-09-13-Dataclasses-For-The-Masses.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="DaaS-Made-Easy">
+<a class="anchor" href="#DaaS-Made-Easy" aria-hidden="true"><span class="octicon octicon-link"></span></a>DaaS Made Easy<a class="anchor-link" href="#DaaS-Made-Easy"> </a>
+</h2>
+<p>Many data analysts, data engineers, and data scientists (trying to be inclusive here) build tables for a living.  The product of their work is data.  The desired features of the data product vary from customer to customer.  A finance executive prefers a bunch of spreadsheets.  An operations team likes their dashboards. For consumption within the data team, you open up dataframes-as-a-service shop.  If you are pursuing enterprise-grade solutions, there's a high chance they will be centered around <a href="https://blog.treasuredata.com/blog/2016/02/10/whats-the-difference-between-aws-redshift-aurora/">OLAP databases</a>.</p>
+<p>I would like to share a Python tool that helps me design, document, and deploy my tables.  The goal was to make the data class declaration as concise as it gets, so that once can prototype rapidly and arrive at the optimal data model.</p>
+
+<pre><code>class SweetTable:
+    a: datatype1
+    b: datatype2</code></pre>
+<p>You might notice parallels to ORM solutions like <a href="https://docs.sqlalchemy.org/en/14/orm/quickstart.html">SQLAlchemy</a> and <a href="https://docs.djangoproject.com/en/4.1/topics/db/models/">Django</a>.</p>
+<blockquote>
+<p>Django <code>Model</code> is the single, definitive source of information about your data. It contains the essential fields and behaviors of the data you’re storing. Generally, each model maps to a single database table.</p>
+</blockquote>
+<p>Example:```from django.db import models</p>
+<p>class Musician(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    instrument = models.CharField(max_length=100)</p>
+<p>class Album(models.Model):
+    artist = models.ForeignKey(Musician, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    release_date = models.DateField()
+    num_stars = models.IntegerField()
+```</p>
+<p>The main issue with existing Python ORMs is that they are made for transactional tasks, where row-by-row data manipulation is common and data relationships are important.  I want none of that.  What do I want?  I want what The Most Interesting Data Engineer In The World (TMIDEITW) wants.</p>
+<p><strong>What does TMIDEITW want?</strong></p>
+<ul>
+<li>Her Parquet files smell of rich mahogany.  </li>
+<li>Her data types are enforced on every continent.  Even the NULLs.  </li>
+<li>She does not often add data. But when she does, she adds a billion rows.  </li>
+</ul>
+<p>In less interesting but more clear terms, we want to construct <strong>dataclasses</strong> for a future <strong>columnar database</strong>:</p>
+<ul>
+<li>efficient, typed, nullable data structures</li>
+<li>interfaces with pandas for familiar analytical tasks </li>
+<li>on-demand conversion to <code>pyarrow</code> objects, en route to Parquet files</li>
+</ul>
+<p><strong>Why not <code>pandas</code> or <code>arrow</code> or...?</strong></p>
+<blockquote>
+<p>I strongly feel that <a href="https://arrow.apache.org/docs/python/index.html">Arrow</a> is a key technology for the next generation of data science tools. I laid out my vision for this recently in my 2017 JupyterCon keynote.
+<em>–Wes McKinney (creator of Pandas)</em></p>
+</blockquote>
+<p>Pandas rules.  It's like a Swiss-army knife - you have all kinds of tools but they're not optimal for the tasks.  The price you pay: it's slow.  Pandas defaults to the most accommodating data types: <code>object</code>, '<code>np.float64</code>, <code>np.int64</code>.  Can some of your fields be casted to something more efficient?  My loose definition of a boundary between <em>small data</em> and <em>big data</em> is the amount of RAM of your laptop.  Optimizing your data structures, starting with data types, can make "big" data "small" again.</p>
+<p>Arrow is harder to say no to.  It's efficient, typed, and nullable.  There are <a href="https://arrow.apache.org/docs/python/compute.html">neat pandas-like functions</a> not offered by the more math-heavy numpy.  The library is large, but it's already required for writing parquet files.  Probably the main reason for not choosing Pyarrow is the desire to meet the data pros where they are, and today this means <code>numpy</code>.  But don't worry: both <code>pd.DataFrame</code> and pyarrow table will be at your fingertips.  We do not consider <a href="https://docs.python.org/3/library/array.html">Python's native typed arrays</a> - not to be confused with lists!  The fact that one needs to be reminded that they're not the same speaks a lot to how often they are used.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Implementation">
+<a class="anchor" href="#Implementation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Implementation<a class="anchor-link" href="#Implementation"> </a>
+</h2>
+<p>Read through the story or skip <a href="#In-The-End">get to the point</a>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Minimal-Example">
+<a class="anchor" href="#Minimal-Example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Minimal Example<a class="anchor-link" href="#Minimal-Example"> </a>
+</h3>
+<p>Let's start with a very simple class with two short <code>numpy</code> arrays as predefined attributes.  We'll also define a function that performs a simple analytical task, a row-wise sum.  I spell out <code>Two</code> in the class name to remind me that we have two data elements.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">class</span> <span class="nc">SimpleDataclassTwo</span><span class="p">:</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">123</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">99</span><span class="p">])</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1234</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">9876</span><span class="p">])</span>
+    
+    <span class="k">def</span> <span class="nf">row_sum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span>
+
+<span class="n">simpledata2</span> <span class="o">=</span> <span class="n">SimpleDataclassTwo</span><span class="p">()</span>
+<span class="n">simpledata2</span><span class="o">.</span><span class="n">row_sum</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([ 1111,     1, -9777])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">simpledata2</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&lt;__main__.SimpleDataclassTwo at 0x7fda41f5ef70&gt;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>that was not very helpful... but at least we can access the attributes:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">simpledata2</span><span class="o">.</span><span class="n">a</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([-123,    1,   99])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">simpledata2</span><span class="o">.</span><span class="n">b</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([ 1234,     0, -9876])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>try to make another instance?</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">SimpleDataclassTwo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">41</span><span class="p">,</span> <span class="mi">40</span><span class="p">]))</span>
+<span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"failed, because we don't have __init__"</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>failed, because we don't have __init__
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>...and that's about it.  Before we start writing <code>__init__</code> and <code>__repr__</code>, let me introduce you to your new best friend: <code>attrs</code></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Attrs">
+<a class="anchor" href="#Attrs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Attrs<a class="anchor-link" href="#Attrs"> </a>
+</h3>
+<blockquote>
+<p><code>attrs</code> is the Python package that will bring back the joy of writing classes.  Trusted by NASA for Mars missions since 2020!</p>
+</blockquote>
+<p>– <a href="https://www.attrs.org/en/stable/index.html">https://www.attrs.org/en/stable/index.html</a>
+NB: if you've previously used <code>attrs</code>, they <a href="https://www.attrs.org/en/stable/changelog.html#id40">recently</a> switched from <code>@attr.s(auto_attrib=True)</code> to <code>@attrs.define</code>.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">attr</span>
+<span class="kn">import</span> <span class="nn">attrs</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nd">@attrs</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">AttrsDataclassTwo</span><span class="p">:</span>
+    <span class="n">a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">123</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">99</span><span class="p">])</span>
+    <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1234</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">9876</span><span class="p">])</span>
+    
+    <span class="k">def</span> <span class="nf">row_sum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span>
+
+<span class="n">attrs_data2</span> <span class="o">=</span> <span class="n">AttrsDataclassTwo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">41</span><span class="p">,</span> <span class="mi">40</span><span class="p">]))</span>
+<span class="n">attrs_data2</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>AttrsDataclassTwo(a=array([1, 2]), b=array([41, 40]))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>With one decorator, two problems with the original <code>SimpleDataclassTwo</code> are solved before you knew they were problems.  Let's learn more about this class instance.  For this purpose, I often reach for <code>__dict__</code>:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">attrs_data2</span><span class="o">.</span><span class="vm">__dict__</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{'a': array([1, 2]), 'b': array([41, 40])}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>this reminds me of...how you instantiate a Pandas dataframe!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Enable-Pandas-and-Pyarrow">
+<a class="anchor" href="#Enable-Pandas-and-Pyarrow" aria-hidden="true"><span class="octicon octicon-link"></span></a>Enable Pandas and Pyarrow<a class="anchor-link" href="#Enable-Pandas-and-Pyarrow"> </a>
+</h3>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pyarrow</span> <span class="k">as</span> <span class="nn">pa</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">attrs_data2</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>a</th>
+      <th>b</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>41</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>40</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nd">@attrs</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">AttrsPandasArrowDataclassTwo</span><span class="p">:</span>
+    <span class="n">a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">123</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">99</span><span class="p">])</span>
+    <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1234</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">9876</span><span class="p">])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pa</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">AttrsPandasArrowDataclassTwo</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>a</th>
+      <th>b</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-123</td>
+      <td>1234</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>99</td>
+      <td>-9876</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">pa</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>pyarrow.Table
+a: int64
+b: int64
+----
+a: [[-123,1,99]]
+b: [[1234,0,-9876]]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Nullable-arrays">
+<a class="anchor" href="#Nullable-arrays" aria-hidden="true"><span class="octicon octicon-link"></span></a>Nullable arrays<a class="anchor-link" href="#Nullable-arrays"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Type-Enforcement">
+<a class="anchor" href="#Type-Enforcement" aria-hidden="true"><span class="octicon octicon-link"></span></a>Type Enforcement<a class="anchor-link" href="#Type-Enforcement"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Inheritance">
+<a class="anchor" href="#Inheritance" aria-hidden="true"><span class="octicon octicon-link"></span></a>Inheritance<a class="anchor-link" href="#Inheritance"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="In-The-End">
+<a class="anchor" href="#In-The-End" aria-hidden="true"><span class="octicon octicon-link"></span></a>In The End<a class="anchor-link" href="#In-The-End"> </a>
+</h3>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pyarrow</span> <span class="k">as</span> <span class="nn">pa</span>
+
+<span class="k">class</span> <span class="nc">ACHTUNG</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="nd">@attrs</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">BaseColumnarModel</span><span class="p">:</span>
+
+    <span class="n">data_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">def</span> <span class="nf">__attrs_post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+            <span class="n">_expected_dtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__annotations__</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s1">'_data'</span><span class="p">):</span>  
+                <span class="n">_dtype</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">dtype</span>  <span class="c1"># for pandas ExtensionDtypes</span>
+            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s1">'dtype'</span><span class="p">):</span>
+                <span class="n">_dtype</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">dtype</span>  <span class="c1"># for numpy arrays</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_dtype</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>  <span class="c1"># for scalars</span>
+            
+            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">_expected_dtype</span><span class="p">)</span><span class="o">.</span><span class="n">dtype</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">_dtype</span><span class="p">)</span><span class="o">.</span><span class="n">dtype</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">y</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ACHTUNG</span><span class="p">(</span><span class="sa">f</span><span class="s1">'wrong dtype in `</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s1">`: `</span><span class="si">{</span><span class="n">_expected_dtype</span><span class="si">}</span><span class="s1">` is not `</span><span class="si">{</span><span class="n">_dtype</span><span class="si">}</span><span class="s1">`'</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">size</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">empty</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">empty_fields</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__annotations__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">empty_fields</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">empty_fields</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pa</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span>
+        <span class="n">arrow_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">is_scalar</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+                <span class="n">arrow_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">_length</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">arrow_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pa</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">arrow_dict</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_dict</span><span class="p">)</span>
+
+<span class="nd">@attrs</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CoolDataFour</span><span class="p">(</span><span class="n">BaseColumnarModel</span><span class="p">):</span>
+    <span class="sd">"""Example Dataclass."""</span>
+    
+    <span class="n">a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span>
+    <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">bool_</span>
+    <span class="n">c</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">d</span><span class="p">:</span> <span class="nb">float</span>
+    
+    <span class="n">data_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'a'</span><span class="p">:</span> <span class="s1">'integer field'</span><span class="p">,</span>
+        <span class="s1">'b'</span><span class="p">:</span> <span class="s1">'is it important?'</span><span class="p">,</span>
+        <span class="s1">'c'</span><span class="p">:</span> <span class="s1">'text'</span><span class="p">,</span>
+        <span class="s1">'d'</span><span class="p">:</span> <span class="s1">'price to pay'</span><span class="p">,</span>
+    <span class="p">}</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">CoolDataFour</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span><span class="o">.</span><span class="n">df</span>  <span class="c1"># for building database templates</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>a</th>
+      <th>b</th>
+      <th>c</th>
+      <th>d</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_scalars</span> <span class="o">=</span> <span class="n">CoolDataFour</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span> <span class="n">b</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">(</span><span class="kc">True</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="s1">'abc'</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
+<span class="n">all_scalars</span><span class="o">.</span><span class="n">pa</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>pyarrow.Table
+a: int8
+b: bool
+c: string
+d: double
+----
+a: [[42]]
+b: [[true]]
+c: [["a"]]
+d: [[1.2]]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">somenulls</span> <span class="o">=</span> <span class="n">CoolDataFour</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">99</span><span class="p">,</span><span class="kc">None</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Int8Dtype</span><span class="p">()),</span> <span class="n">b</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span> <span class="n">c</span><span class="o">=</span><span class="s1">'abc'</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">somenulls</span><span class="o">.</span><span class="n">pa</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>pyarrow.Table
+a: int8
+b: bool
+c: string
+d: double
+----
+a: [[99,null]]
+b: [[false,true]]
+c: [["a","a"]]
+d: [[0.5,0.5]]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">somenulls</span><span class="o">.</span><span class="n">pa</span><span class="o">.</span><span class="n">schema</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>a: int8
+b: bool
+c: string
+d: double
+-- schema metadata --
+a: 'integer field'
+b: 'is it important?'
+c: 'text'
+d: 'price to pay'</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Now-What?">
+<a class="anchor" href="#Now-What?" aria-hidden="true"><span class="octicon octicon-link"></span></a>Now What?<a class="anchor-link" href="#Now-What?"> </a>
+</h2>
+<p>Share your feedback in the comments!</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="liquidcarbon/blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/blog/attrs/dataclasses/numpy/pandas/olap/2022/09/13/Dataclasses-For-The-Masses.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Molecules, Coding, Mellifluence</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/liquidcarbon" target="_blank" title="liquidcarbon"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://www.linkedin.com/in/alekis" target="_blank" title="alekis"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#linkedin"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

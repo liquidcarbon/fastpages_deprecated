@@ -162,7 +162,7 @@ window.onload = wrap_img;
 <a class="anchor" href="#DaaS-Made-Easy" aria-hidden="true"><span class="octicon octicon-link"></span></a>DaaS Made Easy<a class="anchor-link" href="#DaaS-Made-Easy"> </a>
 </h2>
 <p>Many data analysts, data engineers, and data scientists (trying to be inclusive here) build tables for a living.  The product of their work is data.  The desired features of the data product vary from customer to customer.  A finance executive prefers a bunch of spreadsheets.  An operations team likes their dashboards. For consumption within the data team, you open up dataframes-as-a-service shop.  If you are pursuing enterprise-grade solutions, there's a high chance they will be centered around <a href="https://blog.treasuredata.com/blog/2016/02/10/whats-the-difference-between-aws-redshift-aurora/">OLAP databases</a>.</p>
-<p>I would like to share a Python tool that helps me design, document, and deploy my tables.  The goal was to make the data class declaration as concise as it gets, so that once can prototype rapidly and arrive at the optimal data model.</p>
+<p>I would like to share a Python tool that helps me design, document, and deploy my tables.  The goal was to make the data class declaration as concise as it gets, so that one can prototype rapidly and arrive at the optimal data model.</p>
 
 <pre><code>class SweetTable:
     a: datatype1
@@ -171,17 +171,17 @@ window.onload = wrap_img;
 <blockquote>
 <p>Django <code>Model</code> is the single, definitive source of information about your data. It contains the essential fields and behaviors of the data you’re storing. Generally, each model maps to a single database table.</p>
 </blockquote>
-<p>Example:```from django.db import models</p>
-<p>class Musician(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    instrument = models.CharField(max_length=100)</p>
-<p>class Album(models.Model):
+
+<pre><code>from django.db import models
+
+class Musician(models.Model):first_name = models.CharField(max_length=50)    last_name = models.CharField(max_length=50)
+    instrument = models.CharField(max_length=100)
+
+class Album(models.Model):
     artist = models.ForeignKey(Musician, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     release_date = models.DateField()
-    num_stars = models.IntegerField()
-```</p>
+    num_stars = models.IntegerField()</code></pre>
 <p>The main issue with existing Python ORMs is that they are made for transactional tasks, where row-by-row data manipulation is common and data relationships are important.  I want none of that.  What do I want?  I want what The Most Interesting Data Engineer In The World (TMIDEITW) wants.</p>
 <p><strong>What does TMIDEITW want?</strong></p>
 <ul>
@@ -200,7 +200,7 @@ window.onload = wrap_img;
 <p>I strongly feel that <a href="https://arrow.apache.org/docs/python/index.html">Arrow</a> is a key technology for the next generation of data science tools. I laid out my vision for this recently in my 2017 JupyterCon keynote.
 <em>–Wes McKinney (creator of Pandas)</em></p>
 </blockquote>
-<p>Pandas rules.  It's like a Swiss-army knife - you have all kinds of tools but they're not optimal for the tasks.  The price you pay: it's slow.  Pandas defaults to the most accommodating data types: <code>object</code>, '<code>np.float64</code>, <code>np.int64</code>.  Can some of your fields be casted to something more efficient?  My loose definition of a boundary between <em>small data</em> and <em>big data</em> is the amount of RAM of your laptop.  Optimizing your data structures, starting with data types, can make "big" data "small" again.</p>
+<p>Pandas rules.  It's like a Swiss-army knife - you have all kinds of tools but they're not optimal for the tasks.  The price you pay: it's slow.  Pandas defaults to the most accommodating data types: <code>object</code>, <code>np.float64</code>, <code>np.int64</code>.  Can some of your fields be casted to something more efficient?  My loose definition of a boundary between <em>small data</em> and <em>big data</em> is the amount of RAM of your laptop.  Optimizing your data structures, starting with data types, can make "big" data "small" again.</p>
 <p>Arrow is harder to say no to.  It's efficient, typed, and nullable.  There are <a href="https://arrow.apache.org/docs/python/compute.html">neat pandas-like functions</a> not offered by the more math-heavy numpy.  The library is large, but it's already required for writing parquet files.  Probably the main reason for not choosing Pyarrow is the desire to meet the data pros where they are, and today this means <code>numpy</code>.  But don't worry: both <code>pd.DataFrame</code> and pyarrow table will be at your fingertips.  We do not consider <a href="https://docs.python.org/3/library/array.html">Python's native typed arrays</a> - not to be confused with lists!  The fact that one needs to be reminded that they're not the same speaks a lot to how often they are used.</p>
 
 </div>
